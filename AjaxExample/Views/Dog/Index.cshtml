@@ -1,0 +1,85 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<div class="container">
+    <div class="col-md-12">
+        <div class="panel panel-heading">
+            <h3 class="panel-heading">some details</h3>
+            <div class="panel-body">
+                <div class="form-group col-md-5">
+                    <label id="DogName">Dog Name</label>
+                    <input type="text" name="DogName" id="DogName" class="form-control" placeholder="enter dog name here" required />
+                </div>
+                <div class="form-group col-md-5">
+                    <label id="DogNickName">Dog Name</label>
+                    <input type="text" name="DogNickName" id="DogNickName" class="form-control" placeholder="enter dog DogNickName here" required />
+                </div>
+                <div class="form-group col-md-1">
+                    <div style="float:left;display:inline-block">
+                        <input id="btnSave" type="button" value="Save" class="btn btn-primary" /> 
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <hr/>
+    <table id="tblDogs" class="table table-bordered table-striped table-responsive table-hover" >
+        <thead>
+            <tr>
+                <th align="left" class="dogth">Id</th>
+                <th align="left" class="dogth">Name</th>
+                <th align="left" class="dogth">Nickname</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td></td><td></td><td></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        $(function () {
+            LoadData();
+            $("#btnSave").click(function () {
+                alert('btn click');
+            });
+        });
+        function LoadData() {
+            $("#tblDogs tbody tr").remove();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDogs")',
+                dataType: 'json',
+                success: function (data) {
+                    var items = '';
+                    $.each(data, function (i, item) {
+                        var row = "<tr>"
+                            + "<td class='dogtd'>" + item.Id + "</td>"
+                            + "<td class='dogtd'>" + item.Name + "</td>"
+                            + "<td class='dogtd'>" + item.Nickname + "</td>"
+                            + "</tr>";
+                        $('#tblDogs tbody').append(row);
+                    });
+                },
+                error: function (ex) {
+                    var e = jQuery.parseJSON(response.responseText);
+                    alert("Message" + e.Message);
+                    alert("StackTrace" + e.StackTrace);
+                    alert("ExeptionType" + e.ExceptionType);
+
+                }
+            });
+            return false;
+        };
+
+    </script>
+    }
